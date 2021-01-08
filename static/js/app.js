@@ -1,26 +1,31 @@
-function dropdown(){
+function init(){
     d3.json("samples.json").then((sampledata) => {
       var samplenames = sampledata.names
         //console.log(samplenames)
         var location = d3.select("#selDataset")
         samplenames.forEach(function(data){
-            location.append("option").text(data).property("value")
-            })
-            buildtable(samplenames[0])
-            buildcharts(samplenames[0])
+            location.append("option").text(data).property("value", data)
+        });
+        buildtable(samplenames[0])
+        buildcharts(samplenames[0])
     })
 }
-dropdown()
+init()
 
+function optionChanged(newID){
+    buildtable(newID)
+    buildcharts(newID)
+
+}
 //build the tables
 function buildtable(sampleID){
     d3.json("samples.json").then((sampledata) =>{
         var metatable = sampledata.metadata
         //console.log(metatable)
         var location = d3.select("#sample-metadata")
+        location.html("")
         var filterdata = metatable.filter(x => x.id == sampleID)[0] 
         //console.log(filterdata[0])
-        // demographics.html("")
         Object.entries(filterdata).forEach(([key, value]) => {
             //console.log(key,value)
             var row = location.append("tr")
@@ -87,8 +92,8 @@ function buildcharts(sampleID){
     })
 }
 
-//when the an option is select in the dropdown, display the data for the selection
-function optionChanged(newID){
-    buildtable(newID)
-    buildcharts(newID)
-}
+// //when the an option is select in the init, display the data for the selection
+// function optionChanged(newID){
+//     buildtable(newID)
+//     buildcharts(newID)
+// }
